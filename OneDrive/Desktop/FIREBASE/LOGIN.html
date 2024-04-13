@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ <html lang="en">
+   <!-- coding by helpme_coder -->
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login  form </title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+ </head>
+ <body>
+   <body style="background-color:LightGray;"></body>
+    <div class="wrapper">
+      <div class="login-box">
+         <div class="login-header">
+            <span>Login</span>
+         </div>
+         <form id="Login-form">
+         <div class="input_box">
+            <input type="email" id="login_email" class="input-field" required>
+            <label for="login_email" class="label">Email</label>
+            <i class="bx bx-user icon"></i>
+         </div>
+         <div class="input_box">
+            <input type="password" id="login_password" class="input-field" required>
+            <label for="login_password" class="label">Password</label>
+            <i class="bx bx-lock-alt icon"></i>
+         </div>
+         <div class="remember-forgot">
+            <div class="remember-me">
+               <input type="checkbox" id="remember">
+               <label for="remember"> Remember me </label>
+            </div>
+            <div class="forgot">
+               <a href="#">Forgot password ?</a>
+            </div>
+         </div>
+         <div class="input_box">
+            <input type="submit" class="input-submit" value="Login">
+         </form>
+         </div>
+         <div class="register">
+            <span>Don't have an account ? <a href="signup.html">Register</a></span>
+         </div>
+      </div>
+    </div>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+      import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+      import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyCFqLSxZvmJDp-6riFwJIjtIhaIHpYaV54",
+        authDomain: "singup-and-login-page.firebaseapp.com",
+        databaseURL:"https://singup-and-login-page-default-rtdb.firebaseio.com",
+        projectId: "singup-and-login-page",
+        storageBucket: "singup-and-login-page.appspot.com",
+        messagingSenderId: "52860321780",
+        appId: "1:52860321780:web:1be2af6fd238d0f9c103a1",
+        measurementId: "G-DYN91R4VRT"
+      };
+       // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    //console.log(app);
+    const auth = getAuth();
+    const database = getDatabase(app);
+
+
+    document.getElementById("Login-form").addEventListener("submit",function(event){
+    event.preventDefault();
+        var email=document.getElementById("login_email").value;
+        var password=document.getElementById("login_password").value;
+        signInWithEmailAndPassword(auth,email,password)
+        .then((userCredential)=>{
+        const user =userCredential.user;
+        console.log(user);
+        alert(user.email+"Login Successfully Done.");
+        writeToDatabase(user.uid, email, password);
+        window.location.href = "dashboard.html?email=" + encodeURIComponent(user.email);
+        })
+        .catch((error)=>{
+        const errorCode=error.code;
+        const errorMessage=error.message;
+        console.log(errorMessage);
+        alert(error);
+        });
+    });
+    function writeToDatabase(userId, email,password) {
+    set(ref(database, 'Users Login Data/' + userId), {
+        email: email,
+        password:password
+        
+    });
+}
+ </script>    
+ </body>
+ </html>

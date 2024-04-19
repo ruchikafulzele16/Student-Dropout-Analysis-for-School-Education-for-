@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+ <html lang="en">
+   <!-- coding by helpme_coder -->
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup form </title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+ </head>
+ <body>
+   <body style="background-color:LightGray;">
+    <div class="wrapper">
+      <div class="login-box " form name="Registration_Form" method="Post" action="#">
+         <div class="login-header">
+            <span>Signup</span>
+         </div>
+         <form id="signup-form">
+         <div class="input_box">
+            <input type="text" id="fname" class="input-field" required autocomplete="off">
+            <label for="fname" class="label">First Name  </label>
+            <i class="bx bx-user icon"></i>
+         </div>
+         <div class="input_box">
+            <input type="text" id="lname" class="input-field" required autocomplete="off">
+            <label for="lname" class="label">Last Name  </label>
+            <i class="bx bx-user icon"></i>
+         </div>
+         <div class="input_box">
+            <input type="email" id="email" class="input-field" required autocomplete="off">
+            <label for="email" class="label">Email</label>
+            <i class="bx bx-user icon"></i>
+         </div>
+         <div class="input_box">
+            <input type="password" id="password" class="input-field" required>
+            <label for="pass" class="label">Password</label>
+            <i class="bx bx-lock-alt icon"></i>
+         </div>
+         <div class="remember-forgot">
+            <div class="remember-me">
+               <input type="checkbox" id="remember">
+               <label for="remember"> Remember me </label>
+            </div>
+         </div>
+         <div class="input-box">
+            <input type="submit" id="Signup" class="input-submit" value="Signup">
+         </div>
+         </form>
+         <div class="register">
+            <span>Already have  an account ? <a href="Login.html">Login</a></span>
+         </div>
+      </div>
+    </div>
+ </body>
+ <script type="module">
+   // Import the functions you need from the SDKs you need
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+   import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+   import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+   // TODO: Add SDKs for Firebase products that you want to use
+   // https://firebase.google.com/docs/web/setup#available-libraries
+ 
+   // Your web app's Firebase configuration
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+   const firebaseConfig = {
+     apiKey: "AIzaSyCFqLSxZvmJDp-6riFwJIjtIhaIHpYaV54",
+     authDomain: "singup-and-login-page.firebaseapp.com",
+     databaseURL:"https://singup-and-login-page-default-rtdb.firebaseio.com",
+     projectId: "singup-and-login-page",
+     storageBucket: "singup-and-login-page.appspot.com",
+     messagingSenderId: "52860321780",
+     appId: "1:52860321780:web:1be2af6fd238d0f9c103a1",
+     measurementId: "G-DYN91R4VRT"
+   };
+ 
+   // Initialize Firebase
+   const app = initializeApp(firebaseConfig);
+   const analytics = getAnalytics(app);
+
+   //console.log (app);
+  const auth = getAuth();
+  const database = getDatabase();
+
+  //REGISTRATION FORM
+
+  document.getElementById("signup-form").addEventListener("submit",function(event){
+        event.preventDefault();
+        var email=document.getElementById("email").value;
+        var password=document.getElementById("password").value;
+        var firstName = document.getElementById("fname").value; 
+        var lastName = document.getElementById("lname").value;
+        createUserWithEmailAndPassword(auth,email,password)
+        .then((userCredential)=>{
+        const user =userCredential.user;
+        console.log(user);
+        const userRef = ref(database, 'User Signup Data/' + user.uid);
+        set(userRef, { 
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password:password
+            }).then(() => {
+                console.log("User data saved successfully.");
+            }).catch((error) => {
+                console.error("Error saving user data: ", error);
+            });
+
+        alert("Signup Successfully Done.");
+        })
+        .catch((error)=>{
+        const errorCode=error.code;
+        const errorMessage=error.message;
+        console.log(errorMessage);
+        alert(error);
+        });
+    });
+    </script>
+ </html>
